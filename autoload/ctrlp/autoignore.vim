@@ -21,6 +21,10 @@ if !exists('g:ctrlp_autoignore_trace')
 	let g:ctrlp_autoignore_trace = 0
 endif
 
+if !exists('g:ctrlp_autoignore_file')
+	let g:ctrlp_autoignore_file = '.ctrlpignore'
+endif
+
 " }}}
 
 " Initialization {{{
@@ -35,7 +39,7 @@ let g:ctrlp_custom_ignore['func-close'] = 'ctrlp#autoignore#ignore_close'
 if !exists('g:ctrlp_root_markers')
 	let g:ctrlp_root_markers = []
 endif
-call add(g:ctrlp_root_markers, '.ctrlpignore')
+call add(g:ctrlp_root_markers, g:ctrlp_autoignore_file)
 
 " }}}
 
@@ -55,7 +59,7 @@ let s:changed_wildignore = 0
 let s:prev_wildignore = ''
 
 function! s:load_project_patterns(root_dir) abort
-	let l:ign_path = a:root_dir . '/.ctrlpignore'
+	let l:ign_path = a:root_dir . '/' . g:ctrlp_autoignore_file
 	if !filereadable(l:ign_path)
 		call s:trace("No pattern file at: " . l:ign_path)
 		return []
@@ -89,7 +93,7 @@ function! s:load_project_patterns(root_dir) abort
 endfunction
 
 function! s:get_project_patterns(root_dir) abort
-	let l:ign_path = a:root_dir . '/.ctrlpignore'
+	let l:ign_path = a:root_dir . '/' . g:ctrlp_autoignore_file
 	let l:ign_mtime = getftime(l:ign_path)
 	let l:patterns = get(s:proj_cache, a:root_dir)
 	if type(l:patterns) == type({})
